@@ -19,8 +19,7 @@ func NewCartController(cartService services.CartService) *CartController {
 
 // GET /cart
 func (c *CartController) GetCart(ctx *gin.Context) {
-	userIDStr := ctx.Query("user_id")
-	userID, _ := strconv.Atoi(userIDStr)
+		userID := ctx.GetUint("user_id")
 
 	carts, err := c.cartService.GetUserCart(uint(userID))
 	if err != nil {
@@ -33,6 +32,12 @@ func (c *CartController) GetCart(ctx *gin.Context) {
 // POST /cart
 func (c *CartController) AddToCart(ctx *gin.Context) {
 	var cart models.Cart
+	userID := ctx.GetUint("user_id")
+
+	id, _ := strconv.Atoi(ctx.Param("id"))
+	cart.MenuID = uint(id)
+	cart.UserID = userID
+
 	if err := ctx.ShouldBindJSON(&cart); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -43,6 +48,10 @@ func (c *CartController) AddToCart(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusCreated, createdCart)
+}
+
+func (c *CartController) GetUint(s string) any {
+	panic("unimplemented")
 }
 
 // PUT /cart/:id

@@ -17,7 +17,7 @@ func NewOrderController(orderService services.OrderService) *OrderController {
 
 // POST /checkout
 func (c *OrderController) Checkout(ctx *gin.Context) {
-	userID := ctx.MustGet("userID").(uint)
+	userID := ctx.GetUint("user_id")
 
 	order, err := c.orderService.Checkout(userID)
 	if err != nil {
@@ -29,7 +29,7 @@ func (c *OrderController) Checkout(ctx *gin.Context) {
 
 // GET /orders
 func (c *OrderController) GetOrders(ctx *gin.Context) {
-	userID := ctx.MustGet("userID").(uint)
+	userID := ctx.GetUint("user_id")
 
 	orders, err := c.orderService.GetUserOrders(userID)
 	if err != nil {

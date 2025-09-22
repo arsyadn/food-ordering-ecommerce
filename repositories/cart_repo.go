@@ -40,7 +40,7 @@ func (r *cartRepository) Create(cart models.Cart) (models.Cart, error) {
 }
 
 func (r *cartRepository) Update(cart models.Cart) (models.Cart, error) {
-	err := r.db.Save(&cart).Error
+	err := r.db.Exec("UPDATE carts SET quantity = ?, updated_at = NOW() WHERE id = ?",  cart.Quantity, cart.ID).Error
 	return cart, err
 }
 

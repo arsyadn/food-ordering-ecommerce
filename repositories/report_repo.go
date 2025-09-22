@@ -20,6 +20,11 @@ func NewReportRepository(db *gorm.DB) ReportRepository {
 
 func (r *reportRepository) GetSalesReport() ([]models.Order, error) {
 	var orders []models.Order
-	err := r.db.Preload("User").Preload("Items.Menu").Find(&orders).Error
+	err := r.db.Raw(`
+		SELECT o.* 
+		FROM orders o
+		JOIN order_items oi ON oi.order_id = o.id
+		JOIN menus m ON oi.menu_id = m.id
+	`).Scan(&orders).Error
 	return orders, err
 }

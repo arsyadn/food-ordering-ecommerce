@@ -40,7 +40,9 @@ func (r *menuRepository) Create(menu models.Menu) (models.Menu, error) {
 }
 
 func (r *menuRepository) Update(menu models.Menu) (models.Menu, error) {
-	err := r.db.Save(&menu).Error
+	err := r.db.
+		Exec("UPDATE menus SET name = ?, price = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?", menu.Name, menu.Price, menu.ID).
+		Error
 	return menu, err
 }
 

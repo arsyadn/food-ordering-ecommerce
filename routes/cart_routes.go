@@ -2,6 +2,7 @@ package routes
 
 import (
 	"food-ordering/controllers"
+	"food-ordering/middleware"
 	"food-ordering/repositories"
 	"food-ordering/services"
 
@@ -15,9 +16,11 @@ func SetupCartRoutes(rg *gin.RouterGroup, db *gorm.DB) {
 	cartController := controllers.NewCartController(cartService)
 
 	cartRoutes := rg.Group("/cart")
+	cartRoutes.Use(middleware.AuthMiddleware())
+
 	{
 		cartRoutes.GET("/", cartController.GetCart)
-		cartRoutes.POST("/", cartController.AddToCart)
+		cartRoutes.POST("/:id", cartController.AddToCart)
 		cartRoutes.PUT("/:id", cartController.UpdateCart)
 		cartRoutes.DELETE("/:id", cartController.DeleteCart)
 	}

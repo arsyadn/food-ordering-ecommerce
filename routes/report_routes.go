@@ -2,6 +2,7 @@ package routes
 
 import (
 	"food-ordering/controllers"
+	"food-ordering/middleware"
 	"food-ordering/repositories"
 	"food-ordering/services"
 
@@ -15,6 +16,8 @@ func SetupReportRoutes(rg *gin.RouterGroup, db *gorm.DB) {
 	reportController := controllers.NewReportController(reportService)
 
 	reports := rg.Group("/reports")
+	reports.Use(middleware.AuthMiddleware())
+	reports.Use(middleware.RoleAdminMiddleware())
 	{
 		reports.GET("/sales", reportController.GetSalesReport)
 	}

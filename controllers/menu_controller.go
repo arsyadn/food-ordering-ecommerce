@@ -49,3 +49,26 @@ func (c *MenuController) CreateMenu(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusCreated, createdMenu)
 }
+
+func (c *MenuController) UpdateMenu(ctx *gin.Context) {
+	id, _ := strconv.Atoi(ctx.Param("id"))
+	var menu models.Menu
+	if err := ctx.ShouldBindJSON(&menu); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	updatedMenu, err := c.menuService.UpdateMenu(uint(id), menu)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, updatedMenu)
+}
+func (c *MenuController) DeleteMenu(ctx *gin.Context) {
+	id, _ := strconv.Atoi(ctx.Param("id"))
+	if err := c.menuService.DeleteMenu(uint(id)); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "Success delete menu"})
+}

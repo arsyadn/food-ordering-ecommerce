@@ -15,11 +15,7 @@ func NewReportController(service services.ReportService) *ReportController {
 	return &ReportController{reportService: service}
 }
 func (c *ReportController) GetSalesReport(ctx *gin.Context) {
-	role, exists := ctx.Get("role")
-	if !exists || role != "admin" {
-		ctx.JSON(http.StatusForbidden, gin.H{"error": "Forbidden: Admins only"})
-		return
-	}
+
 
 	orders, err := c.reportService.GetSalesReport()
 	if err != nil {

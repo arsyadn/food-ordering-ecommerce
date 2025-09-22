@@ -31,7 +31,7 @@ func (s *UserService) Register(user *models.User) (string, uint, error) {
 	}
 
 	// generate token
-	token, err := utils.GenerateToken(user.ID)
+	token, err := utils.GenerateToken(user.ID, user.Role)
 	if err != nil {
 		return "", 0, errors.New("failed to generate token")
 	}
@@ -52,7 +52,7 @@ func (s *UserService) Login(req *models.LoginRequest) (string, uint, error) {
 		return "", 0, errors.New("invalid email or password")
 	}
 
-	token, err := utils.GenerateToken(user.ID)
+	token, err := utils.GenerateToken(user.ID, user.Role)
 	if err != nil {
 		return "", 0, errors.New("failed to generate token")
 	}
